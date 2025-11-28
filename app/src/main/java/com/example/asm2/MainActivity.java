@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Ánh xạ nút
+        // Ánh xạ nút button từ activities đến layout
         btnExpense = findViewById(R.id.btnExpense);
         btnBudget = findViewById(R.id.btnBudget);
 
