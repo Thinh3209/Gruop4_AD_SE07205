@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Nhập thông tin chi phí -->
+    <EditText
+        android:id="@+id/edtName"
+        android:hint="Tên đồ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/edtQuantity"
+        android:hint="Số lượng"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/edtPrice"
+        android:hint="Giá tiền"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Nút thêm chi phí -->
+    <Button
+        android:id="@+id/btnAdd"
+        android:text="Thêm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
+
+    <!-- List hiển thị chi phí -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="12dp"/>
+
+    <!-- Thông tin tổng hợp -->
+    <TextView
+        android:id="@+id/txtTotalQuantity"
+        android:text="Tổng số lượng: 0"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/txtTotalPrice"
+        android:text="Tổng chi: 0"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Ngân sách và số tiền còn lại -->
+    <TextView
+        android:id="@+id/txtBudget"
+        android:text="Ngân sách: 0"
+        android:textSize="16sp"
+        android:layout_marginTop="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/txtRemaining"
+        android:text="Số tiền còn lại: 0"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
