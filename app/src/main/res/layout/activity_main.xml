@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#F5F5F5"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="QUẢN LÝ CHI TIÊU"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnExpense"
+        android:text=" Theo dõi chi phí"
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnBudget"
+        android:text=" Thiết lập ngân sách"
+        android:layout_marginTop="8dp"
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnStatistic"
+        android:text=" Xem Báo cáo &amp; Thống kê"
+        android:backgroundTint="#009688"
+        android:layout_marginTop="8dp"
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnOffer"
+            android:text=" Săn Ưu Đãi"
+            android:backgroundTint="#E91E63"
+            android:textSize="12sp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnEvent"
+            android:text=" Sự kiện"
+            android:backgroundTint="#2196F3"
+            android:textSize="12sp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:text="Cài đặt hệ thống"
+        android:textStyle="italic"
+        android:textColor="#777777"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnNotification"
+        android:text=" Bật nhắc nhở (20:00 hàng ngày)"
+        android:backgroundTint="#673AB7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnTestNotify"
+        android:text="⚡ Test Thông báo (Sau 10 giây)"
+        android:backgroundTint="#FF5722"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+</LinearLayout>
