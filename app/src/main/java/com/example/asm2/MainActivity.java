@@ -43,16 +43,47 @@ public class MainActivity extends AppCompatActivity {
 
         // --- 2. GẮN SỰ KIỆN CHUYỂN MÀN HÌNH ---
 
+        // Theo dõi chi phí
+        btnExpense.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ExpenseActivity.class)));
 
         // Thiết lập ngân sách
         btnBudget.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BudgetActivity.class)));
 
+        // Xem báo cáo
+        //btnStatistic.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, StatisticActivity.class)));
 
         // Săn ưu đãi
         btnOffer.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, OfferActivity.class)));
 
+        // Nhắc nhở sự kiện (MỚI)
+        //btnEvent.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EventActivity.class)));
+
+        // --- 3. CÁC CHỨC NĂNG THÔNG BÁO ---
+
+        // Bật nhắc nhở cố định 20:00 hàng ngày
+        btnNotification.setOnClickListener(v -> scheduleDailyReminder());
+
 
     }
 
+    // Hàm hẹn giờ 20:00 hàng ngày
+    private void scheduleDailyReminder() {
 
+
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 20); // 20 giờ
+        calendar.set(Calendar.MINUTE, 0);       // 0 phút
+        calendar.set(Calendar.SECOND, 0);
+
+        // Nếu đã qua 20h hôm nay thì hẹn sang ngày mai
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+//
+    }
 }
