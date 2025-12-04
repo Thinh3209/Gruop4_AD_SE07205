@@ -50,26 +50,27 @@ public class MainActivity extends AppCompatActivity {
         btnBudget.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BudgetActivity.class)));
 
         // Xem báo cáo
-        //btnStatistic.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, StatisticActivity.class)));
+        btnStatistic.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, StatisticActivity.class)));
 
         // Săn ưu đãi
         btnOffer.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, OfferActivity.class)));
 
         // Nhắc nhở sự kiện (MỚI)
-        //btnEvent.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EventActivity.class)));
+        btnEvent.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, EventActivity.class)));
 
         // --- 3. CÁC CHỨC NĂNG THÔNG BÁO ---
 
         // Bật nhắc nhở cố định 20:00 hàng ngày
         btnNotification.setOnClickListener(v -> scheduleDailyReminder());
 
-
+        // Test thông báo nhanh (10 giây sau nổ)
+        btnTestNotify.setOnClickListener(v -> scheduleTestNotification());
     }
 
     // Hàm hẹn giờ 20:00 hàng ngày
     private void scheduleDailyReminder() {
-
-
+        Intent intent = new Intent(MainActivity.this, ReminderReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -84,6 +85,34 @@ public class MainActivity extends AppCompatActivity {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-//
+        // Lặp lại hàng ngày
+        alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+        );
+
+        Toast.makeText(this, "Đã bật nhắc nhở lúc 20:00 hàng ngày!", Toast.LENGTH_SHORT).show();
+    }
+
+    // Hàm test nhanh (10 giây sau)
+    private void scheduleTestNotification() {
+       Intent intent = new Intent(MainActivity.this, ReminderReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 10); // Cộng thêm 10 giây
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+
+        Toast.makeText(this, "Đã đặt! Thoát app ngay và đợi 10 giây...", Toast.LENGTH_LONG).show();
     }
 }
