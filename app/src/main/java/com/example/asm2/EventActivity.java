@@ -121,7 +121,7 @@ public class EventActivity extends AppCompatActivity {
         // Dùng ID ngẫu nhiên để không bị trùng
         int uniqueId = (int) System.currentTimeMillis();
 
-        // FLAG_UPDATE_CURRENT: Cập nhật nội dung mới nhất
+        
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, uniqueId, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         // setExactAndAllowWhileIdle: Đảm bảo nổ chuông kể cả khi tắt màn hình (Android 6.0+)
