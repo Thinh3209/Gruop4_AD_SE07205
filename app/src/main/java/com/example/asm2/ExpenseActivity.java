@@ -64,39 +64,39 @@ public class ExpenseActivity extends AppCompatActivity {
         txtBudget = findViewById(R.id.txtBudget);
         txtRemaining = findViewById(R.id.txtRemaining);
 
-        // Cấu hình Spinner
         String[] categories = {"Ăn uống", "Đi lại", "Mua sắm", "Nhà cửa", "Giải trí", "Học tập", "Khác"};
         spinnerCategory.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
-
         String[] frequencies = {"Hàng ngày", "Hàng tuần", "Hàng tháng"};
         spinnerFrequency.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, frequencies));
 
-        cbRecurring.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            spinnerFrequency.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
-
-        // Load dữ liệu
+        cbRecurring.setOnCheckedChangeListener((buttonView, isChecked) ->
+                spinnerFrequency.setVisibility(isChecked ? View.VISIBLE : View.GONE)
+        );
         loadBudget();
         loadExpenses();
         checkAndAddRecurringExpenses();
 
         btnAdd.setOnClickListener(v -> addExpense());
 
-        // ... (Giữ nguyên phần click listview sửa xóa cũ) ...
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            // Code mở EditExpenseActivity (giữ nguyên như cũ)
+            Intent intent = new Intent(ExpenseActivity.this, EditExpenseActivity.class);
+            intent.putExtra("expenseItem", expenses.get(position));
+            intent.putExtra("position", position);
+            startActivityForResult(intent, 100);
         });
 
         updateExpenseDisplay();
     }
 
     private void addExpense() {
-        // ... (Giữ nguyên logic lấy dữ liệu input như cũ) ...
         String name = edtName.getText().toString();
         String qtyStr = edtQuantity.getText().toString();
         String priceStr = edtPrice.getText().toString();
 
-        if (name.isEmpty() || qtyStr.isEmpty() || priceStr.isEmpty()) return;
+        if (name.isEmpty() || qtyStr.isEmpty() || priceStr.isEmpty()) {
+            Toast.makeText(this, "Nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         try {
             int quantity = Integer.parseInt(qtyStr);
@@ -113,60 +113,56 @@ public class ExpenseActivity extends AppCompatActivity {
             saveExpenses();
             updateExpenseDisplay();
 
-            // --- CHỨC NĂNG 2: CẢNH BÁO TIÊU QUÁ LỐ (MỚI THÊM) ---
             checkBudgetWarning();
-            // ----------------------------------------------------
 
-            // Reset form
-            edtName.setText(""); edtQuantity.setText(""); edtPrice.setText("");
+            edtName.setText("");
+            edtQuantity.setText("");
+            edtPrice.setText("");
             cbRecurring.setChecked(false);
 
-        } catch (NumberFormatException e) { }
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Số lượng hoặc giá không hợp lệ!", Toast.LENGTH_SHORT).show();
+        }
     }
-
-    // --- LOGIC KIỂM TRA & BẮN THÔNG BÁO CẢNH BÁO ---
     private void checkBudgetWarning() {
-        if (budget <= 0) return; // Chưa set ngân sách thì thôi
+        if (budget <= 0) return;
 
         double totalSpent = 0;
         for (ExpenseItem e : expenses) totalSpent += e.getTotalPrice();
 
-        // Tính phần trăm
         double percent = (totalSpent / budget) * 100;
 
         if (percent >= 100) {
-            // Cảnh báo ĐỎ: Vỡ ngân sách
             sendWarningNotification("CẢNH BÁO KHẨN CẤP 🚨",
-                    "Bạn đã tiêu " + String.format("%.0f", percent) + "% ngân sách! Hãy dừng chi tiêu ngay.");
-        }
-        else if (percent >= 80) {
-            // Cảnh báo VÀNG: Sắp hết tiền
-            sendWarningNotification("Cảnh báo chi tiêu ⚠️",
-                    "Bạn đã dùng " + String.format("%.0f", percent) + "% ngân sách. Hãy cẩn thận!");
+                    "Bạn đã tiêu " + (int) percent + "% ngân sách!");
+        } else if (percent >= 80) {
+            sendWarningNotification("Cảnh báo ⚠️",
+                    "Bạn đã dùng " + (int) percent + "% ngân sách.");
         }
     }
 
     private void sendWarningNotification(String title, String content) {
-        // Tạo kênh thông báo riêng cho cảnh báo
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("BUDGET_WARNING", "Cảnh báo ngân sách", NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel channel = new NotificationChannel(
+                    "BUDGET_WARNING", "Cảnh báo ngân sách", NotificationManager.IMPORTANCE_HIGH
+            );
             getSystemService(NotificationManager.class).createNotificationChannel(channel);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "BUDGET_WARNING")
-                .setSmallIcon(android.R.drawable.stat_sys_warning) // Icon cảnh báo
+                .setSmallIcon(android.R.drawable.stat_sys_warning)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+
             NotificationManagerCompat.from(this).notify(999, builder.build());
         }
     }
-  
 
-    // --- Các hàm phụ trợ cần thiết (để đảm bảo code chạy được) ---
     private void addExpenseString(ExpenseItem e) {
         String info = e.getName() + " (" + e.getCategory() + ") - " + e.getTotalPrice();
         if (e.isRecurring()) info += " [Lặp: " + e.getFrequency() + "]";
@@ -176,16 +172,22 @@ public class ExpenseActivity extends AppCompatActivity {
     private void updateExpenseDisplay() {
         double totalPrice = 0;
         int totalQty = 0;
+
         for (ExpenseItem e : expenses) {
             totalQty += e.getQuantity();
             totalPrice += e.getTotalPrice();
         }
+
         txtTotalQuantity.setText("Tổng số lượng: " + totalQty);
         txtTotalPrice.setText("Tổng chi: " + totalPrice);
+
         double remaining = budget - totalPrice;
         txtRemaining.setText("Số tiền còn lại: " + remaining);
-        if (remaining < 0) txtRemaining.setTextColor(getColor(android.R.color.holo_red_dark));
-        else txtRemaining.setTextColor(getColor(android.R.color.black));
+
+        if (remaining < 0)
+            txtRemaining.setTextColor(getColor(android.R.color.holo_red_dark));
+        else
+            txtRemaining.setTextColor(getColor(android.R.color.black));
     }
 
     private void saveExpenses() {
@@ -198,22 +200,60 @@ public class ExpenseActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("expensePrefs", MODE_PRIVATE);
         Gson gson = new Gson();
         String json = prefs.getString("expenses", "[]");
-        Type type = new TypeToken<ArrayList<ExpenseItem>>(){}.getType();
+
+        Type type = new TypeToken<ArrayList<ExpenseItem>>() {
+        }.getType();
+
         expenses = gson.fromJson(json, type);
         if (expenses == null) expenses = new ArrayList<>();
+
         expenseStrings = new ArrayList<>();
         for (ExpenseItem e : expenses) addExpenseString(e);
+
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, expenseStrings);
         listView.setAdapter(adapter);
     }
 
     private void loadBudget() {
         SharedPreferences prefsBudget = getSharedPreferences("budgetPrefs", MODE_PRIVATE);
-        try { budget = Double.parseDouble(prefsBudget.getString("budget", "0")); } catch (Exception e) { budget = 0; }
+        try {
+            budget = Double.parseDouble(prefsBudget.getString("budget", "0"));
+        } catch (Exception e) {
+            budget = 0;
+        }
         txtBudget.setText("Ngân sách: " + budget);
     }
 
     private void checkAndAddRecurringExpenses() {
-        // Logic y hệt bước 3
+        // TODO: Tương tự logic bạn đã viết ở bước trước
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+
+            int pos = data.getIntExtra("position", -1);
+
+            if (data.getBooleanExtra("delete", false)) {
+                expenses.remove(pos);
+                expenseStrings.remove(pos);
+
+                adapter.notifyDataSetChanged();
+                saveExpenses();
+                updateExpenseDisplay();
+                return;
+            }
+
+            ExpenseItem updatedItem = (ExpenseItem) data.getSerializableExtra("updatedItem");
+
+            expenses.set(pos, updatedItem);
+            expenseStrings.set(pos, updatedItem.getName() + " (" +
+                    updatedItem.getCategory() + ") - " + updatedItem.getTotalPrice());
+
+            adapter.notifyDataSetChanged();
+            saveExpenses();
+            updateExpenseDisplay();
+        }
     }
 }
