@@ -133,10 +133,10 @@ public class ExpenseActivity extends AppCompatActivity {
         double percent = (totalSpent / budget) * 100;
 
         if (percent >= 100) {
-            sendWarningNotification("CẢNH BÁO KHẨN CẤP 🚨",
+            sendWarningNotification("CẢNH BÁO KHẨN CẤP",
                     "Bạn đã tiêu " + (int) percent + "% ngân sách!");
         } else if (percent >= 80) {
-            sendWarningNotification("Cảnh báo ⚠️",
+            sendWarningNotification("Cảnh báo",
                     "Bạn đã dùng " + (int) percent + "% ngân sách.");
         }
     }
