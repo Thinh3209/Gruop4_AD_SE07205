@@ -164,13 +164,7 @@ public class ExpenseActivity extends AppCompatActivity {
             NotificationManagerCompat.from(this).notify(999, builder.build());
         }
     }
-    // ---------------------------------------------------
-
-    // ... (Giữ nguyên các hàm checkAndAddRecurringExpenses, addExpenseString, save, load như cũ) ...
-    // Để tiết kiệm không gian tôi không paste lại các hàm cũ đã gửi ở Bước 3
-    // Bạn hãy giữ nguyên các hàm đó nhé.
-
-    // Nếu bạn cần tôi paste lại TOÀN BỘ file ExpenseActivity (cả cũ lẫn mới), hãy bảo tôi!
+  
 
     // --- Các hàm phụ trợ cần thiết (để đảm bảo code chạy được) ---
     private void addExpenseString(ExpenseItem e) {
